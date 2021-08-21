@@ -1,0 +1,3 @@
+from dir2/note1.txt
+
+hello world
