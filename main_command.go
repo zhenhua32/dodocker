@@ -5,6 +5,7 @@ import (
 
 	"github.com/sirupsen/logrus"
 	"github.com/urfave/cli/v2"
+	"github.com/zhenhua32/dodocker/cgroups/subsystems"
 	"github.com/zhenhua32/dodocker/container"
 )
 
@@ -17,14 +18,31 @@ var runCommand = cli.Command{
 			Name:  "ti",
 			Usage: "启用 tty",
 		},
+		&cli.StringFlag{
+			Name:  "m",
+			Usage: "memoery limit",
+		},
+		&cli.StringFlag{
+			Name:  "cpushare",
+			Usage: "cpushare limit",
+		},
+		&cli.StringFlag{
+			Name:  "cpuset",
+			Usage: "cpuset limit",
+		},
 	},
 	Action: func(ctx *cli.Context) error {
 		if ctx.Args().Len() < 1 {
 			return fmt.Errorf("缺少容器命令")
 		}
-		cmd := ctx.Args().Get(0)
+		var cmdArray = ctx.Args().Slice()
 		tty := ctx.Bool("ti")
-		Run(tty, cmd)
+		resConf := &subsystems.ResourceConfig{
+			MemoryLimit: ctx.String("m"),
+			CpuSet:      ctx.String("cpuset"),
+			CpuShare:    ctx.String("cpushare"),
+		}
+		Run(tty, cmdArray, resConf)
 		return nil
 	},
 }
@@ -34,9 +52,7 @@ var initCommand = cli.Command{
 	Usage: "初始化容器进程, 在容器中运行用户的进程. 不要在外部调用它",
 	Action: func(ctx *cli.Context) error {
 		logrus.Infof("init come on")
-		cmd := ctx.Args().Get(0)
-		logrus.Infof("command %s", cmd)
-		err := container.RunContainerInitProcess(cmd, nil)
+		err := container.RunContainerInitProcess()
 		return err
 	},
 }
