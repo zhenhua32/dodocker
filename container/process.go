@@ -16,6 +16,7 @@ func NewParentProcess(tty bool) (*exec.Cmd, *os.File) {
 	}
 	// 这里就是调用自己
 	cmd := exec.Command("/proc/self/exe", "init")
+	// 在新的 namespace 中执行
 	cmd.SysProcAttr = &syscall.SysProcAttr{
 		Cloneflags: syscall.CLONE_NEWUTS |
 			syscall.CLONE_NEWPID |

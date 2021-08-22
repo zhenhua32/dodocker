@@ -30,6 +30,10 @@ var runCommand = cli.Command{
 			Name:  "cpuset",
 			Usage: "cpuset limit",
 		},
+		&cli.StringFlag{
+			Name:  "cwd",
+			Usage: "设置子进程的当前工作目录",
+		},
 	},
 	Action: func(ctx *cli.Context) error {
 		if ctx.Args().Len() < 1 {
@@ -42,7 +46,7 @@ var runCommand = cli.Command{
 			CpuSet:      ctx.String("cpuset"),
 			CpuShare:    ctx.String("cpushare"),
 		}
-		Run(tty, cmdArray, resConf)
+		Run(tty, cmdArray, resConf, ctx.String("cwd"))
 		return nil
 	},
 }
