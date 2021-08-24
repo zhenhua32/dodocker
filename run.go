@@ -13,7 +13,7 @@ import (
 
 // 获取构建好的命令, 并运行
 // cwd 是当前工作目录, 应该有 busybox.tar 等文件
-func Run(tty bool, comArray []string, res *subsystems.ResourceConfig, cwd string) {
+func Run(tty bool, comArray []string, res *subsystems.ResourceConfig, cwd string, volume string) {
 	parent, writePipe := container.NewParentProcess(tty)
 	if parent == nil {
 		logrus.Errorf("New parent process error")
@@ -23,7 +23,7 @@ func Run(tty bool, comArray []string, res *subsystems.ResourceConfig, cwd string
 	cwd, _ = filepath.Abs(cwd)
 	mntURL := filepath.Join(cwd, "rootfs")
 	// 构建隔离空间
-	container.NewWorkSpace(cwd, mntURL)
+	container.NewWorkSpace(cwd, mntURL, volume)
 	parent.Dir = mntURL
 
 	if err := parent.Start(); err != nil {
@@ -40,7 +40,7 @@ func Run(tty bool, comArray []string, res *subsystems.ResourceConfig, cwd string
 	parent.Wait()
 
 	// 到了退出的时候了, 清理目录
-	container.DeleteWorkSpace(cwd, mntURL)
+	container.DeleteWorkSpace(cwd, mntURL, volume)
 }
 
 func sendInitCommand(comArray []string, writePipe *os.File) {

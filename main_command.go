@@ -34,6 +34,10 @@ var runCommand = cli.Command{
 			Name:  "cwd",
 			Usage: "设置子进程的当前工作目录",
 		},
+		&cli.StringFlag{
+			Name:  "v",
+			Usage: "volume, host:container",
+		},
 	},
 	Action: func(ctx *cli.Context) error {
 		if ctx.Args().Len() < 1 {
@@ -46,7 +50,7 @@ var runCommand = cli.Command{
 			CpuSet:      ctx.String("cpuset"),
 			CpuShare:    ctx.String("cpushare"),
 		}
-		Run(tty, cmdArray, resConf, ctx.String("cwd"))
+		Run(tty, cmdArray, resConf, ctx.String("cwd"), ctx.String("v"))
 		return nil
 	},
 }
