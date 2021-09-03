@@ -20,3 +20,21 @@ docker export -o busybox.tar <容器ID>
 mkdir -p ./busybox
 tar xvf busybox.tar -C busybox/
 ```
+
+## 编译
+
+```bash
+go build .
+```
+
+## 编译后的命令行工具
+
+编译后会生成一个 dodocker 的命令行工具, 一些常见的用法如下:
+
+```bash
+sudo ./dodocker -h
+sudo ./dodocker run --ti --cwd ./ -v ./aa:/aa bash
+sudo ./dodocker commit --cwd ./ myimage
+```
+
+**--cwd** 是当前工作目录, 应该有 busybox.tar 等文件, 用于解压镜像.

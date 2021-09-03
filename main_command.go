@@ -12,7 +12,7 @@ import (
 var runCommand = cli.Command{
 	Name: "run",
 	Usage: `创建容器, 使用 namespace 和 cgroups
-		dodocker run -ti [command]`,
+		dodocker run --ti [command]`,
 	Flags: []cli.Flag{
 		&cli.BoolFlag{
 			Name:  "ti",
@@ -62,5 +62,24 @@ var initCommand = cli.Command{
 		logrus.Infof("init come on")
 		err := container.RunContainerInitProcess()
 		return err
+	},
+}
+
+var commitCommand = cli.Command{
+	Name:  "commit",
+	Usage: "创建一个新的容器镜像",
+	Flags: []cli.Flag{
+		&cli.StringFlag{
+			Name:  "cwd",
+			Usage: "设置子进程的当前工作目录",
+		},
+	},
+	Action: func(ctx *cli.Context) error {
+		if ctx.Args().Len() < 1 {
+			return fmt.Errorf("缺少容器的镜像名称")
+		}
+		imageName := ctx.Args().Get(0)
+		commitContainer(imageName, ctx.String("cwd"))
+		return nil
 	},
 }
