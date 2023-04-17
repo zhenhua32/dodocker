@@ -38,3 +38,5 @@ sudo ./dodocker commit --cwd ./ myimage
 ```
 
 **--cwd** 是当前工作目录, 应该有 busybox.tar 等文件, 用于解压镜像.
+
+# 好久没更新了, 也不知道当时看到哪里了
