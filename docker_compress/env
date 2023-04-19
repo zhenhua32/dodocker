@@ -1,0 +1,2 @@
+REDIS_VERSION=6.0.5
+REDIS_URL=http://download.redis.io/releases/redis-$REDIS_VERSION.tar.gz

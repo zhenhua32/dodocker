@@ -1,0 +1,22 @@
+FROM ubuntu:focal
+
+ENV REDIS_VERSION=6.0.5
+ENV REDIS_URL=http://download.redis.io/releases/redis-$REDIS_VERSION.tar.gz
+
+# update source and install tools
+RUN sed -i "s/archive.ubuntu.com/mirrors.aliyun.com/g; s/security.ubuntu.com/mirrors.aliyun.com/g" /etc/apt/sources.list &&\
+    apt update &&\
+    apt install -y curl make gcc &&\
+
+    # download source code and install redis
+    curl -L $REDIS_URL | tar xzv &&\
+    cd redis-$REDIS_VERSION &&\
+    make &&\
+    make install &&\
+
+    # clean up
+    apt remove -y --auto-remove curl make gcc &&\
+    apt clean &&\
+    rm  -rf /var/lib/apt/lists/* 
+
+CMD ["redis-server"]
